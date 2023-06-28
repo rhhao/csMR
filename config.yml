@@ -1,0 +1,62 @@
+---
+
+############################################################################################################################
+#################################################### INFORMATION ###########################################################
+############################################################################################################################
+
+# All file paths accept absolute and relative paths, although absolute paths are preferred.
+# Environment variables (including ~) are not processed.
+
+
+############################################################################################################################
+############################################ RUN COMMON VARIABLES ##########################################################
+############################################################################################################################
+
+# Folder where all the outputs are saved (COLOC, MR results files, etc.) 
+# csMR will write the analysis results into <BASE_OUTPUT_DIR>/precomputation, <BASE_OUTPUT_DIR>/COLOC and <BASE_OUTPUT_DIR>/MR subdirectories respectively. The directory and its subdirectories will be created if they do not exist.
+
+BASE_OUTPUT_DIR: csMR-EXAMPLE
+
+
+### eQTL_INPUT: list of eQTL files
+# id: identifier for the dataset. *MUST be unique and NO double dash allowed.
+# path: filepath to the QTL data. *Compressed files are not allowed.
+eQTL_INPUT: # eQTL summary file must contain "SNP, A1, A2, MAF, BETA, SE, P, N, GENE" columns.
+  - id: Astrocyte
+    path: example/single-cell-eQTL/sceQTL_brain_Astrocyte.chr1.ma
+  - id: ExN
+    path: example/single-cell-eQTL/sceQTL_brain_Excitatory.neurons.chr1.ma
+
+
+### GWAS_SUMSTATS: 
+# id: identifier for GWAS. *MUST be unique and NO double dash allowed.
+# path: filepath to GWAS sumstats. *Compressed files are not allowed.
+GWAS_SUMSTATS: # GWAS summary file must contain "SNP, A1, A2, MAF, BETA, SE, P, N" columns.
+  - id: BMI_Giant_UKB
+    path: example/BMI_GWAS/BMI_giant_ukbb_combined_2018.chr1.ma
+    type: quant
+
+OUTCOME_DIR: ### path to outcome summary stats. The required file format is the same as GWAS summary file.
+  example/outcomes
+
+GWAS_REFERENCE_GENOTYPE: # specify path to reference genotype and provide duplicated snp files if available.
+  path:
+    data/reference_genome_1000G_EUR
+  duplicated_snp_path: #if not applicable type "None".
+    None
+
+eQTL_REFERENCE_GENOTYPE:
+  data/reference_genome_1000G_EUR
+
+
+# Parameters for colocalization analysis
+COLOC_SETTING: # Window definition for mapping gene specificity values to SNPs
+  WINDOW_SIZE_BP:
+    100000
+  COVERAGES: # Multiple coverages are allowed which must be separated by comma. eg: 0.6,0.9
+    0.9
+  THREADS:
+    5
+  CUTOFF:
+    0.8
+
