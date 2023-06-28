@@ -32,7 +32,7 @@ conda activate csMR
 
 ### R dependencies
 
-csMR requires R packages [`phenoscanner`]((https://github.com/phenoscanner/phenoscanner)) and updated [`mr.raps`](https://github.com/qingyuanzhao/mr.raps) (version 0.4.1). To install these libraries, run the following commands:
+csMR requires R packages [`phenoscanner`](https://github.com/phenoscanner/phenoscanner) and updated [`mr.raps`](https://github.com/qingyuanzhao/mr.raps) (version 0.4.1). To install these libraries, run the following commands:
 
 ``` R
 if (!require("devtools")) { install.packages("devtools") }
