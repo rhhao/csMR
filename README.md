@@ -4,7 +4,7 @@ We introduce the **C**ell-**S**tratified **M**endelian **R**andomization (**csMR
 
 ## **Workflow**
 
-![csMR_workflow](/Users/lockenliu/Downloads/csMR_workflow.jpg)
+![csMR_workflow](https://github.com/rhhao/csMR/main/illustration/csMR_workflow.jpg)
 
 ## **Installation**
 
