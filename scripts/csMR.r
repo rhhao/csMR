@@ -285,8 +285,9 @@ if (file.info(clump_file)$size == 0){
 			
 			write.table(result$data$SNP[which(result$data$mr_keep == "TRUE")], file = paste0(exposure_id,".",outcome_id,".",cell_type,".snps"), row.names = F, col.names = F,quote = F,sep = "\n") ### Output instrumental snps
 			p1 = mr_scatter_plot(result$mr_res, result$data)
+			
 			### 5. sensitivity test
-	
+			
 			harmonised_data = result$data
 			sensitivity = sensitivity_test(harmonised_data)
 			p2 = mr_leaveoneout_plot(sensitivity$loo_df)
@@ -295,6 +296,23 @@ if (file.info(clump_file)$size == 0){
 			print(p2)
 			dev.off()
 			sensitivity$sensitivity_res["F_statistic"] = F_statistic
+
+			### 6. MR method recommendation
+
+			if (unique(result$mr_res$nsnp) == 1){
+				recommendation = "Wald ratio"
+			}else{
+				if (sensitivity$sensitivity_res$Cochrans_Q_P > 0.05 & sensitivity$sensitivity_res$mr_egger_intercept_P > 0.05 & sensitivity$sensitivity_res$MRPRESSO_P > 0.05){
+					recommendation = "Inverse variance weighted"
+				}else if (sensitivity$sensitivity_res$Cochrans_Q_P < 0.05 | sensitivity$sensitivity_res$mr_egger_intercept_P < 0.05 | sensitivity$sensitivity_res$MRPRESSO_P < 0.05) {
+					if (sensitivity$sensitivity_res$"Ruckers_Q'_P" >= 0.05 ){
+						recommendation = "MR Egger"
+					}else{
+						recommendation = "Weighted median (preferred)/Weighted mode"
+					}
+				}
+			}
+			sensitivity$sensitivity_res["MR_recom"] = recommendation
 			write.table(sensitivity$sensitivity_res, file = paste0(exposure_id,".",outcome_id,".",cell_type,".MR.sensitivity"), row.names = F, col.names = T,quote = F,sep = "\t")
 			system(paste0("rm *.", cell_type, ".MR.radial.ma"))
 		}
