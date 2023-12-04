@@ -5,7 +5,7 @@ We introduce the **C**ell-**S**tratified **M**endelian **R**andomization (**csMR
 ## **Workflow**
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/5487016/72677599-80e5a980-3a9e-11ea-95c4-ac645cb364a4.png" width="600"/>
+    <img src="illustration/csMR_workflow.jpg" width="600"/>
 </p>
 
 ## **Installation**
