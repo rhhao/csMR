@@ -106,6 +106,6 @@ Jun-Hui Liu (Xi’an Jiaotong University, China)
 
 ## **Contact**
 
-Please create an issue on the github repo if you encounter any problems. You can also contact the developers through email: ruohanhao(at)xjtu.edu.cn.
+Please create an issue on the github repo if you encounter any problems. You can also contact the developers through email: ruohanhao@xjtu.edu.cn.
 
 ## **Reference**
