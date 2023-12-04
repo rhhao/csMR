@@ -76,9 +76,9 @@ QTL summary stats:
 
 **Step 2: Modify the config.yml file**
 
-Before running csMR, a configuration file needs to be modified to specify the input data and advanced parameters. An example is provided in the config.yml file that will process the example data obtained by further [download](http://www.bigc.online/csMR/index.php). The demo data are ready to use after decompressing into the installation directory of csMR.
+Before running csMR, a configuration file needs to be modified to specify the input data and advanced parameters. An example is provided in the config.yml file that will process the example data obtained by further [download](http://www.bigc.online/csMR/index.php). The demo data are ready to use **after decompressing into the installation directory of csMR**.
 
-Reference genome data are also required to run example data. Users can download reference_genome_1000G_EUR [here](http://www.bigc.online/csMR/index.php). The genome data are ready to use after decompressing into the `csMR/data` directory. 
+Reference genome data are also required to run example data. Users can download reference_genome_1000G_EUR [here](http://www.bigc.online/csMR/index.php). The genome data are ready to use **after decompressing into the `csMR/data` directory**. 
 
 **Step 3: Run csMR**
 
