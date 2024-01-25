@@ -27,7 +27,16 @@ outdir = paste0(outdir, "/MR")
 if (!dir.exists(paste0(outdir))){
 dir.create(paste0(outdir))
 }
-data <- read.table(coloc_res, header = F)
+#data <- read.table(coloc_res, header = F)
+data <- data.frame("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
+colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
+data <- data[-1,]
+tryCatch({
+	data <- read.table(coloc_res, header = FALSE)
+	colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
+}, error = function(e) {
+	print("An error occurred while reading the file.")
+})
 colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
 confounders <- c("smoking","alcohol","education","college","university","smoke","drink","drinking")
 exp_ma_data <- fread(file = exp_ma_file, header = T, data.table = F, select = c("SNP", "P"))
