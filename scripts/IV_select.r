@@ -6,7 +6,7 @@ library(phenoscanner)
 command<-matrix(c(
                   'help', 'h', 0,'logical', 'help.',
                   'coloc_res', 'r', 1, 'character', 'susie coloc result.',
-		  'exp_ma_file', 'e', 1, 'character', 'input GWAS .ma file.',
+                  'exp_ma_file', 'e', 1, 'character', 'input GWAS .ma file.',
                   'cells','c',1,'character','all tested cells.',
                   'outdir','o',1,'character',"output directory."
                   ),byrow=T,ncol=5)
@@ -27,17 +27,15 @@ outdir = paste0(outdir, "/MR")
 if (!dir.exists(paste0(outdir))){
 dir.create(paste0(outdir))
 }
-#data <- read.table(coloc_res, header = F)
-data <- data.frame("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
-colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
-data <- data[-1,]
 tryCatch({
 	data <- read.table(coloc_res, header = FALSE)
-	colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
 }, error = function(e) {
-	print("An error occurred while reading the file.")
+	print("An error occurred while reading the colocalization result file. Could be no colocalized SNP under PPH4 > 0.8")
+	data <- data.frame(matrix(nrow = 0, ncol = 15))
+	colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
+}, finally = {
+	colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
 })
-colnames(data) <- c("gwas_name", "gwas_info", "eqtl_range", "ensg", "cell", "nsnps", "hit_eqtl", "hit_gwas", "PP.H0.abf", "PP.H1.abf", "PP.H2.abf", "PP.H3.abf", "PP.H4.abf", "idx1", "idx2")
 confounders <- c("smoking","alcohol","education","college","university","smoke","drink","drinking")
 exp_ma_data <- fread(file = exp_ma_file, header = T, data.table = F, select = c("SNP", "P"))
 exp_ma_data <- exp_ma_data[na.omit(match(data[,8],exp_ma_data$SNP)),] %>% unique()

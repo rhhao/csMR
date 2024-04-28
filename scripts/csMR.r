@@ -189,8 +189,8 @@ sensitivity_test = function(harmonised_data){
   
   ###leave-one-out
   loo <- mr_leaveoneout(harmonised_data)
-  if (is.na(sum(loo$p > 0.05))){
-    leave_one_out = "Just one SNP"
+  if (is.na(loo$p)){
+    leave_one_out = "only one available SNP"
   }else if (sum(loo$p > 0.05) == 0){
     leave_one_out = "Pass"
   }else{
@@ -298,7 +298,7 @@ if (file.info(clump_file)$size == 0){
       harmonised_data = result$data
       sensitivity = sensitivity_test(harmonised_data)
       p2 = mr_leaveoneout_plot(sensitivity$loo_df)
-      pdf(paste0(exposure_id,".",outcome_id,".",cell_type,".MR.plot.pdf"))	
+      pdf(paste0(exposure_id,".",outcome_id,".",cell_type,".MR.plot.pdf"))
       print(p1)
       print(p2)
       dev.off()
@@ -307,9 +307,9 @@ if (file.info(clump_file)$size == 0){
       ### 6. MR method recommendation
       
       if(is.null(result$mr_res)){
-        recommendation = "no SNP in MR"
+        recommendation = "no MR results"
       }else if (unique(result$mr_res$nsnp) == 1){
-        recommendation = "Just one SNP"
+        recommendation = "Wald ratio"
       }else{
         if(NA %in% c(sensitivity$sensitivity_res$Cochrans_Q_P, sensitivity$sensitivity_res$mr_egger_intercept_P, sensitivity$sensitivity_res$MRPRESSO_P)){
           recommendation = "Weighted median (preferred)/Weighted mode"
