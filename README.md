@@ -109,3 +109,6 @@ Jun-Hui Liu (Xi’an Jiaotong University, China)
 Please create an issue on the github repo if you encounter any problems. You can also contact the developers through email: ruohanhao@xjtu.edu.cn.
 
 ## **Reference**
+
+<ins> **Cell-Stratified MR (csMR)** </ins>
+Hao, RH., Zhang, TP., Jiang, F. et al. Revealing brain cell-stratified causality through dissecting causal variants according to their cell-type-specific effects on gene expression. Nat Commun 15, 4890 (2024). [https://doi.org/10.1038/s41467-024-49263-4](https://doi.org/10.1038/s41467-024-49263-4)
