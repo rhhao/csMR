@@ -16,7 +16,7 @@ if(!is.null(args$help) ){
 }
 
 Clump <- function(exp_ma_file,ref_path,duplication_path,clump_out){
-	if(duplication_path != "None"){
+	if(duplication_path != paste0(getwd(),"/None")){
 		for (n in 1:22){
 			dup_snp_file = list.files(pattern = paste0("chr",n,"(\\D+|$)"), path = duplication_path, ignore.case=T)
 			plink_file = gsub("\\.bim","",list.files(pattern = paste0("chr",n,"\\D+.*bim$"), path = ref_path, ignore.case=T))
