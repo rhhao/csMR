@@ -189,7 +189,7 @@ sensitivity_test = function(harmonised_data){
   
   ###leave-one-out
   loo <- mr_leaveoneout(harmonised_data)
-  if (is.na(loo$p)){
+  if (is.na(sum(loo$p > 0.05))){
     leave_one_out = "only one available SNP"
   }else if (sum(loo$p > 0.05) == 0){
     leave_one_out = "Pass"
