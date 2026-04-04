@@ -8,6 +8,8 @@
 #########################################################################
 import os, sys, re
 import argparse
+import shutil
+import subprocess
 
 parser = argparse.ArgumentParser(description = "Summarize susie colocalization results.")
 parser.add_argument('-c', '--coverage', help="Coverage used in susie finemapping.", type=str, required=True)
@@ -45,6 +47,57 @@ def clean_up(precomp_dir, gwas_id):
         if re.search("eqtl_gwas_pair_file|eqtl_maf_finemap.list|eqtl_maf.list|gwas_maf_finemap.list|^coloc\.%s\.GWAS_split\..*\.eQTL_split.pairs$"%(gwas_id), file):
             os.system("rm %s"%(os.path.join(precomp_dir, file)))
 
+def awk_supports_strtonum():
+    awk_path = shutil.which("awk")
+    if awk_path is None:
+        return False
+    test = subprocess.run(
+        [awk_path, 'BEGIN{print strtonum("1")}'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+    return test.returncode == 0
+
+def filter_coloc_with_python(coloc_res, coloc_filter, coloc_cutoff):
+    with open(coloc_res, "r") as fin, open(coloc_filter, "w") as fout:
+        next(fin, None)
+        for line in fin:
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) < 13:
+                continue
+            try:
+                pph4 = float(fields[12])
+            except ValueError:
+                continue
+            if pph4 >= coloc_cutoff:
+                fout.write(line)
+
+def filter_coloc_with_awk(coloc_res, coloc_filter, coloc_cutoff):
+    with open(coloc_filter, "w") as fout:
+        run = subprocess.run(
+            ["awk", "-F", "\t", "strtonum($13) >= %f" % coloc_cutoff, coloc_res],
+            stdout=fout,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+    return run.returncode == 0, run.stderr
+
+def filter_coloc_results(coloc_res, coloc_cutoff):
+    coloc_filter = coloc_res + ".PPH4." + str(coloc_cutoff)
+    # macOS default awk usually does not support gawk-only strtonum().
+    if sys.platform == "darwin" and not awk_supports_strtonum():
+        sys.stderr.write("awk strtonum unavailable on macOS, fallback to Python filter.\n")
+        filter_coloc_with_python(coloc_res, coloc_filter, coloc_cutoff)
+        return
+
+    ok, err = filter_coloc_with_awk(coloc_res, coloc_filter, coloc_cutoff)
+    if not ok:
+        sys.stderr.write("awk filter failed, fallback to Python filter.\n")
+        if err:
+            sys.stderr.write(err)
+        filter_coloc_with_python(coloc_res, coloc_filter, coloc_cutoff)
+
 ##################################
 precomp_dir = os.path.join(outdir, "precomputation")
 outdir = os.path.join(outdir, "COLOC")
@@ -62,6 +115,6 @@ for coverage in d_res_all:
             ff1.write("gwas_name\tgwas_info\teqtl_range\tensg\tcell\tnsnps\thit_eqtl\thit_gwas\tPP.H0.abf\tPP.H1.abf\tPP.H2.abf\tPP.H3.abf\tPP.H4.abf\tidx1\tidx2\n")
             for res in d_res_all[coverage]:
                 ff1.write("\t".join([str(j) for j in res])+"\n")
-    os.system("awk -F'\t' 'strtonum($13) >= %(coloc_cutoff)f' %(coloc_res)s > %(coloc_filter)s"%{"coloc_cutoff":coloc_cutoff, "coloc_res":coloc_res , "coloc_filter":coloc_res+".PPH4."+str(coloc_cutoff)})
+    filter_coloc_results(coloc_res, coloc_cutoff)
 
 clean_up(precomp_dir, gwas_id)

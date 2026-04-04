@@ -236,8 +236,8 @@ rule snp_filter:
 		gwas_ma_file = lambda wildcards: GWAS_SUMSTATS[wildcards.run_prefix]['path'],
 		cells = ",".join(CELL_TYPES),
 		outdir = BASE_OUTPUT_DIR
-#	conda:
-#		"envs/envR4.yml"
+	#	conda:
+	#		"envs/envR4.yml"
 	shell:
 		"Rscript scripts/IV_select.r -r {params.coloc_out} -e {params.gwas_ma_file} -c {params.cells} -o {params.outdir}"
 
@@ -251,8 +251,8 @@ rule clump:
 		snp_file = "{BASE_OUTPUT_DIR}/MR/Susie_coloc.{run_prefix}.results.coverage.{coverage}.PPH4.{coloc_cutoff}.{cell_type}.IV",
 		reference_genotype = GWAS_REFERENCE_PATH,
 		reference_dupliaction_path = GWAS_REFERENCE_DUP
-#	conda:
-#		"envs/envR4.yml"
+	#	conda:
+	#		"envs/envR4.yml"
 	shell:
 		"Rscript scripts/clump.r -e {params.exp_ma_file} -s {params.snp_file} -r {params.reference_genotype} -d {params.reference_dupliaction_path}"
 
